@@ -2,11 +2,20 @@
 #define PRODUTOFACTORY_H
 
 #include "Produto.h"
+#include "ProdutoComum.h"
+#include "ProdutoEletronico.h"
+#include "ProdutoPerecivel.h"
 
 class ProdutoFactory{
     public:
-        static Produto* criar(const std::string& tipo, int id, const std::string& nome,
+        static Produto* criarComum(int id, const std::string& nome,
         double precoCusto, double precoVenda, int quantidade, int estoqueMinimo);
+
+        static Produto* criarEletronico(int id, const std::string& nome,
+        double precoCusto, double precoVenda, int quantidade, int estoqueMinimo, int garantiaMeses);
+
+        static Produto* criarPerecivel(int id, const std::string& nome,
+        double precoCusto, double precoVenda, int quantidade, int estoqueMinimo, const std::string& validade);
 };
 
 #endif
