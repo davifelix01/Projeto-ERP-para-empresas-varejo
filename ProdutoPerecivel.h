@@ -5,7 +5,7 @@
 
 class ProdutoPerecivel : public Produto{
     private:
-        std::string validade;
+        std::string validade; //validade do produto
     public:
         ProdutoPerecivel(int id, const std::string& nome, double precoCusto,
             double precoVenda, int quantidade, int estoqueMinimo, const std::string& validade);

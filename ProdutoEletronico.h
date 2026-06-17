@@ -5,7 +5,7 @@
 
 class ProdutoEletronico : public Produto{
         private:
-            int garantiaMeses;
+            int garantiaMeses; //garantia do produto em meses
         public:
             ProdutoEletronico(int id, const std::string& nome, double precoCusto,
             double precoVenda, int quantidade, int estoqueMinimo, int garantiaMeses); 

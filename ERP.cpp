@@ -32,15 +32,15 @@ void ERP::registrarPedido(const std::vector<ItemPedido>& itens) {
 
         // 2) Nao ha estoque suficiente -> recusa o item.
         if (!estoque.temDisponibilidade(id, qtd)) {
-            std::cout << "\n  Item " << (i + 1) << ": " << p->nome << "\n";
+            std::cout << "\n  Item " << (i + 1) << ": " << p->getNome() << "\n";
             std::cout << "    [VENDA RECUSADA] solicitado " << qtd
-                      << ", disponivel " << p->quantidade << "\n";
+                      << ", disponivel " << p->getQuantidade() << "\n";
             continue;
         }
 
         // 3) Venda aceita.
-        int antes = p->quantidade;
-        double totalItem = qtd * p->precoVenda;
+        int antes = p->getQuantidade();
+        double totalItem = qtd * p->getPrecoVenda();
         totalDoPedido += totalItem;
 
         std::cout << "\n  Item " << (i + 1) << ": " << p->descricao()
@@ -58,33 +58,33 @@ void ERP::registrarPedido(const std::vector<ItemPedido>& itens) {
 
         // ---- avisa o ESTOQUE (da baixa) ----
         estoque.baixar(id, qtd);
-        std::cout << "    [Estoque]    " << p->nome << ": "
-                  << antes << " -> " << p->quantidade << " un";
-        if (p->quantidade <= p->estoqueMinimo)
+        std::cout << "    [Estoque]    " << p->getNome() << ": "
+                  << antes << " -> " << p->getQuantidade() << " un";
+        if (p->getQuantidade() <= p->getEstoqueMinimo())
             std::cout << "  (ATENCAO: no minimo!)";
         std::cout << "\n";
 
         // ---- avisa o FINANCEIRO (registra receita) ----
         financeiro.registrarReceita("Venda #" + std::to_string(numeroPedido)
-                                    + " - " + p->nome, totalItem);
+                                    + " - " + p->getNome(), totalItem);
         std::cout << "    [Financeiro] receita: +R$ " << totalItem << "\n";
 
         // 4) Se o estoque ficou no minimo (ou abaixo), o setor de
         //    compras gera uma reposicao automatica e ela ja' chega.
-        if (p->quantidade <= p->estoqueMinimo) {
-            Reposicao r = reposicoes.gerar(id, p->nome, QTD_REPOSICAO, p->precoCusto);
+        if (p->getQuantidade() <= p->getEstoqueMinimo()) {
+            Reposicao r = reposicoes.gerar(id, p->getNome(), QTD_REPOSICAO, p->getPrecoCusto());
             estoque.repor(id, QTD_REPOSICAO);  // a mercadoria chega e repoe o estoque
 
             std::cout << "\n    [COMPRAS] Reposicao automatica gerada (Pedido #"
                       << r.id << ")\n";
-            std::cout << "      Produto    : " << p->nome << "\n";
+            std::cout << "      Produto    : " << p->getNome() << "\n";
             std::cout << "      Quantidade : " << r.quantidade << " un\n";
             std::cout << "      Custo      : R$ " << r.custoTotal << "\n";
-            std::cout << "      Estoque    : reposto para " << p->quantidade << " un\n";
+            std::cout << "      Estoque    : reposto para " << p->getQuantidade() << " un\n";
 
             // A reposicao e' uma despesa para o financeiro.
             financeiro.registrarDespesa("Reposicao #" + std::to_string(r.id)
-                                        + " - " + p->nome, r.custoTotal);
+                                        + " - " + p->getNome(), r.custoTotal);
             std::cout << "      [Financeiro] despesa: -R$ " << r.custoTotal << "\n";
         }
     }
@@ -100,6 +100,8 @@ void ERP::registrarPedido(const std::vector<ItemPedido>& itens) {
 void ERP::consultarEstoque() {
     estoque.listar();
 }
+
+
 
 // Opcao 3: delega para o gerenciador de reposicao listar os pedidos.
 void ERP::verReposicoes() {

@@ -33,8 +33,15 @@ protected:
     Produto(int id, const std::string& nome,
             double precoCusto, double precoVenda,
             int quantidade, int estoqueMinimo);
+    virtual ~Produto() = default;
 
     void setQuantidade(int qtd);
+    int getId() const;
+    std::string getNome() const;
+    double getPrecoCusto() const;
+    double getPrecoVenda() const;
+    int getQuantidade() const;
+    int getEstoqueMinimo() const;
 
     // Texto curto "Nome (Tipo)" usado nas impressoes.
     std::string descricao() const;
